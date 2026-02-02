@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "../../../../lib/db";
+import prisma from "../../lib/db";
 
 export type RoleRequest = {
   name: string;
@@ -97,7 +97,7 @@ export async function PATCH(request: NextRequest): Promise<NextResponse> {
         message: error instanceof Error ? error.message : "Unknown error",
       },
 
-      
+
       {
         status: 500,
       },
