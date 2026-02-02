@@ -96,6 +96,7 @@ export async function PATCH(request: NextRequest): Promise<NextResponse> {
         status: "error",
         message: error instanceof Error ? error.message : "Unknown error",
       },
+      
       {
         status: 500,
       },
