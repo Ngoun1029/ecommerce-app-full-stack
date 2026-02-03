@@ -12,12 +12,17 @@
   "dependencies": {
     "@prisma/adapter-pg": "^7.3.0",
     "@prisma/client": "^7.3.0",
+    "bcryptjs": "^3.0.3",
+    "cookie": "^1.1.1",
+    "dotenv": "^17.2.3",
+    "jsonwebtoken": "^9.0.3",
     "next": "16.1.6",
     "react": "19.2.3",
     "react-dom": "19.2.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
