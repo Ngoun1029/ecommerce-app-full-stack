@@ -1,4 +1,4 @@
-import { RegisterRequest } from "@/app/types/request/RegisterRequest";
+import { RegisterRequest } from "@/app/types/RegisterRequest";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "../../../../../lib/prisma";
 import { findOneWithRelations } from "../../../../../lib/find";

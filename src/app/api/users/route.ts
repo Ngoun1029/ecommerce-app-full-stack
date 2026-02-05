@@ -1,4 +1,4 @@
-import { UserRequest } from "@/app/types/request/UserRequest";
+import { UserRequest } from "@/app/types/UserRequest";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt, { compare } from "bcryptjs";
 import { prisma } from "../../../../lib/prisma";
