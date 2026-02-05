@@ -10,4 +10,6 @@
  */
 export type * from './models/Roles'
 export type * from './models/Users'
+export type * from './models/Categories'
+export type * from './models/Products'
 export type * from './commonInputTypes'

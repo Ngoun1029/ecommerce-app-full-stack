@@ -6,7 +6,7 @@ import { prisma } from "../lib/prisma";
 export async function middleware(req: NextRequest) {
   try {
     // ✅ Public routes
-    const publicPaths = ["/api/auths/logins", "/api/auths/registers"];
+    const publicPaths = ["/api/auths/logins", "/api/auths/registers", "/api/uploads"];
     if (publicPaths.includes(req.nextUrl.pathname)) {
       return NextResponse.next();
     }

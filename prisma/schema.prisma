@@ -5,7 +5,7 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
   output   = "../src/generated/prisma"
 }
 
@@ -26,10 +26,35 @@ model Users {
   email    String  @unique
   name     String?
   password String
+  image    String?
+  roleId   Int
+  role     Roles   @relation(fields: [roleId], references: [id])
 
-  roleId Int
-  role   Roles @relation(fields: [roleId], references: [id])
-  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Categories {
+  id        Int        @id @default(autoincrement())
+  name      String     @unique
+  image     String
+  status    Boolean    @default(true)
+  products  Products[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Products {
+  id          Int        @id @default(autoincrement())
+  name        String
+  image       Json
+  price       Float
+  categoryId  Int
+  rate        Float?
+  description String?
+  color       Json
+  status      Boolean    @default(true)
+  category    Categories @relation(fields: [categoryId], references: [id])
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
 }
