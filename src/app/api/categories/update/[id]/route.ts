@@ -1,7 +1,8 @@
-import { CategoryRequest } from "@/app/types/CategoryRequest";
+
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "../../../../../../lib/prisma";
 import { uploadToR2 } from "../../../../../../utils/file";
+import { CategoryRequest } from "@/app/types/request/CategoryRequest";
 
 export async function PATCH(
   request: NextRequest,

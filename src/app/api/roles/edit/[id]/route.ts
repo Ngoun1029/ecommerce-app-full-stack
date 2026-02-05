@@ -4,7 +4,7 @@ import { RoleRequest } from "@/app/types/request/RoleRequest";
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{id: string}> },
 ): Promise<NextResponse> {
   try {
     const body: RoleRequest = await request.json();
