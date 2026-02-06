@@ -18,10 +18,25 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       prisma.products.count(),
     ]);
 
+    const productsWithMainImage = products.map((product) => {
+      const images = (product.image as Record<string, string>) || {};
+
+      // pick the first image in the object as "mainImage"
+      const firstImage = Object.values(images)[0] || null;
+      const mainImage = firstImage
+        ? `${process.env.R2_PUBLIC_URL}/${firstImage}`
+        : null;
+
+      return {
+        ...product,
+        image: mainImage, // ✅ new single image field
+      };
+    });
+
     return NextResponse.json(
       {
         status: "success",
-        data: products,
+        data: productsWithMainImage,
         meta: {
           current_page: page,
           per_page: perPage,

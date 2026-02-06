@@ -20,7 +20,7 @@ const config: runtime.GetPrismaClientConfig = {
   "clientVersion": "7.3.0",
   "engineVersion": "9d6ad21cbbceab97458517b147a6a09ff43aa735",
   "activeProvider": "postgresql",
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = \"prisma-client\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel Roles {\n  id        Int      @id @default(autoincrement())\n  name      String   @unique\n  users     Users[]\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n\nmodel Users {\n  id       Int     @id @default(autoincrement())\n  email    String  @unique\n  name     String?\n  password String\n  image    String?\n  roleId   Int\n  role     Roles   @relation(fields: [roleId], references: [id])\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n\nmodel Categories {\n  id        Int        @id @default(autoincrement())\n  name      String     @unique\n  image     String\n  status    Boolean    @default(true)\n  products  Products[]\n  createdAt DateTime   @default(now())\n  updatedAt DateTime   @updatedAt\n}\n\nmodel Products {\n  id          Int        @id @default(autoincrement())\n  name        String\n  image       Json\n  price       Float\n  categoryId  Int\n  rate        Float?\n  description String?\n  color       Json\n  status      Boolean    @default(true)\n  category    Categories @relation(fields: [categoryId], references: [id])\n  createdAt   DateTime   @default(now())\n  updatedAt   DateTime   @updatedAt\n}\n",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = \"prisma-client\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel Roles {\n  id        Int      @id @default(autoincrement())\n  name      String   @unique\n  users     Users[]\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n\nmodel Users {\n  id       Int     @id @default(autoincrement())\n  email    String  @unique\n  name     String?\n  password String\n  image    String?\n  roleId   Int\n  role     Roles   @relation(fields: [roleId], references: [id])\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n\nmodel Categories {\n  id        Int        @id @default(autoincrement())\n  name      String     @unique\n  image     String\n  status    Boolean    @default(true)\n  products  Products[]\n  createdAt DateTime   @default(now())\n  updatedAt DateTime   @updatedAt\n}\n\nmodel Products {\n  id          Int        @id @default(autoincrement())\n  name        String\n  image       Json       @default(\"[]\")\n  price       Float\n  categoryId  Int\n  rate        Float?\n  description String?\n  color       Json\n  status      Boolean    @default(true)\n  category    Categories @relation(fields: [categoryId], references: [id])\n  createdAt   DateTime   @default(now())\n  updatedAt   DateTime   @updatedAt\n\n  @@index([price])\n  @@index([categoryId])\n  @@index([name])\n}\n",
   "runtimeDataModel": {
     "models": {},
     "enums": {},
@@ -94,7 +94,6 @@ export interface PrismaClient<
   in out OmitOpts extends Prisma.PrismaClientOptions['omit'] = undefined,
   in out ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
 > {
-  [x: string]: any
   [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['other'] }
 
   $on<V extends LogOpts>(eventType: V, callback: (event: V extends 'query' ? Prisma.QueryEvent : Prisma.LogEvent) => void): PrismaClient;
@@ -185,7 +184,7 @@ export interface PrismaClient<
     * const roles = await prisma.roles.findMany()
     * ```
     */
-  get products(): Prisma.RolesDelegate<ExtArgs, { omit: OmitOpts }>;
+  get roles(): Prisma.RolesDelegate<ExtArgs, { omit: OmitOpts }>;
 
   /**
    * `prisma.users`: Exposes CRUD operations for the **Users** model.

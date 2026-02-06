@@ -342,7 +342,7 @@ export type ProductsScalarWhereWithAggregatesInput = {
 
 export type ProductsCreateInput = {
   name: string
-  image: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  image?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   price: number
   rate?: number | null
   description?: string | null
@@ -356,7 +356,7 @@ export type ProductsCreateInput = {
 export type ProductsUncheckedCreateInput = {
   id?: number
   name: string
-  image: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  image?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   price: number
   categoryId: number
   rate?: number | null
@@ -397,7 +397,7 @@ export type ProductsUncheckedUpdateInput = {
 export type ProductsCreateManyInput = {
   id?: number
   name: string
-  image: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  image?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   price: number
   categoryId: number
   rate?: number | null
@@ -556,7 +556,7 @@ export type NullableFloatFieldUpdateOperationsInput = {
 
 export type ProductsCreateWithoutCategoryInput = {
   name: string
-  image: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  image?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   price: number
   rate?: number | null
   description?: string | null
@@ -569,7 +569,7 @@ export type ProductsCreateWithoutCategoryInput = {
 export type ProductsUncheckedCreateWithoutCategoryInput = {
   id?: number
   name: string
-  image: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  image?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   price: number
   rate?: number | null
   description?: string | null
@@ -625,7 +625,7 @@ export type ProductsScalarWhereInput = {
 export type ProductsCreateManyCategoryInput = {
   id?: number
   name: string
-  image: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  image?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   price: number
   rate?: number | null
   description?: string | null

@@ -5,16 +5,20 @@ import { Pagination } from "@/app/components/ui/pagination";
 import { Column } from "@/app/types/Column";
 import { CategoryResponse } from "@/app/types/response/CategoryResponse";
 import { useMemo, useState } from "react";
-import {
-  FaEdit,
-  FaTrash,
-} from "react-icons/fa";
+import { FaEdit, FaTrash } from "react-icons/fa";
 import { useCategoriesData } from "../../../../hooks/categories-hooks";
+import { useRouter } from "next/navigation";
+import CategoryCreateDialog from "@/app/components/categories/CategoryAddDialog";
 
 export default function CategoriesPage() {
+  const router = useRouter();
   const [page, setPage] = useState(1);
+  const [open, setOpen] = useState(false);
 
   const { data, isLoading, isError, error } = useCategoriesData(page);
+  if (isError || error) {
+    router.push("/login");
+  }
 
   const columns: Column<CategoryResponse>[] = useMemo(
     () => [
@@ -75,7 +79,35 @@ export default function CategoriesPage() {
 
   return (
     <div className="space-y-6">
+      <CategoryCreateDialog
+        open={open}
+        setOpen={setOpen}
+        onSuccess={() => {
+          setPage(1); // reset to first page
+          // refetch(); // if using react-query
+        }}
+      />
       <div className="rounded-2xl space-y-1">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-semibold">Categories</h2>
+
+          <button
+            onClick={() => setOpen(true)}
+            className="
+    inline-flex items-center gap-2
+    rounded-xl border border-primary/20
+    bg-primary/10 px-4 py-2
+    text-sm font-medium text-primary
+    transition
+    hover:bg-primary/20
+    active:scale-[0.98]
+  "
+          >
+            <span className="text-base leading-none">＋</span>
+            Add Category
+          </button>
+        </div>
+
         {isError ? (
           <div className="p-10 text-center text-red-400">{error?.message}</div>
         ) : (

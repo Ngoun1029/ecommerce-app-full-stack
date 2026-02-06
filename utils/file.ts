@@ -44,3 +44,72 @@ export async function uploadToR2(
     return null;
   }
 }
+
+type UploadInput = File | File[] | null;
+type UploadedFilesMap = Record<string, string>;
+
+type UploadFileArgs = {
+  files: UploadInput;
+  fileStore: string;
+  productId: string | number;
+  upload: (args: {
+    buffer: Buffer;
+    path: string;
+    type: string;
+  }) => Promise<string>;
+};
+
+export async function multipleUploadFile({
+  files,
+  fileStore,
+  productId,
+  upload,
+}: UploadFileArgs): Promise<UploadedFilesMap> {
+  if (!files) return {};
+
+  const fileArray = Array.isArray(files) ? files : [files];
+  const result: UploadedFilesMap = {};
+
+  for (const file of fileArray) {
+    const originalName = file.name;
+
+    // ✅ get real extension
+    const extension = (() => {
+      const ext = originalName.split(".").pop()?.toLowerCase();
+      if (!ext) throw new Error("File has no extension");
+      return ext;
+    })();
+
+    const nameWithoutExtension = originalName.replace(/\.[^/.]+$/, "");
+    const encryptedName = Buffer.from(nameWithoutExtension).toString("base64");
+
+    const filename = `${encryptedName}.${extension}`;
+    const cloudPath = `${fileStore}/${productId}/${filename}`;
+
+    const buffer = Buffer.from(await file.arrayBuffer());
+
+    try {
+      const storedPath = await upload({
+        buffer,
+        path: cloudPath,
+        type: extension,
+      });
+
+      result[originalName] = storedPath;
+    } catch {
+      // fallback → UUID (Edge-safe)
+      const fallbackName = `${uuidv4()}.${extension}`;
+      const fallbackPath = `${fileStore}/${productId}/${fallbackName}`;
+
+      const storedPath = await upload({
+        buffer,
+        path: fallbackPath,
+        type: extension,
+      });
+
+      result[originalName] = storedPath;
+    }
+  }
+
+  return result;
+}

@@ -3,14 +3,25 @@ import type { NextRequest } from "next/server";
 import jwt from "jsonwebtoken";
 import { prisma } from "../lib/prisma";
 
+const publicPaths = [
+  "/api/auths/logins",
+  "/api/auths/registers",
+  "/api/categories/client-view",
+  "/api/products/client-view",
+  "/api/products/client-detail", // remove :path*, handle in code
+];
 export async function middleware(req: NextRequest) {
   try {
     // ✅ Public routes
-    const publicPaths = ["/api/auths/logins", "/api/auths/registers", "/api/categories/client-view"];
-    if (publicPaths.includes(req.nextUrl.pathname)) {
+    const { pathname } = req.nextUrl;
+
+    const isPublic = publicPaths.some(
+      (path) => pathname === path || pathname.startsWith(`${path}/`),
+    );
+
+    if (isPublic) {
       return NextResponse.next();
     }
-
     // 1️⃣ Get token from cookie
     const token = req.cookies.get("access_token")?.value;
     if (!token) {

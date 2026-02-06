@@ -47,7 +47,7 @@ model Categories {
 model Products {
   id          Int        @id @default(autoincrement())
   name        String
-  image       Json
+  image       Json       @default("[]")
   price       Float
   categoryId  Int
   rate        Float?
@@ -57,4 +57,8 @@ model Products {
   category    Categories @relation(fields: [categoryId], references: [id])
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
+
+  @@index([price])
+  @@index([categoryId])
+  @@index([name])
 }
