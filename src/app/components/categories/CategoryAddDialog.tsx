@@ -1,12 +1,9 @@
 "use client";
 
+import { Props } from "@/app/types/CreateProp";
 import { useEffect, useState } from "react";
 
-type Props = {
-  open: boolean;
-  setOpen: (open: boolean) => void;
-  onSuccess?: () => void;
-};
+
 
 type Errors = Partial<Record<"name" | "image", string>>;
 
