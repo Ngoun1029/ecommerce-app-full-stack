@@ -80,7 +80,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     await prisma.users.update({
       where: { id: decoded.id },
       data: {
-        image: imageUrl
+        image: `${process.env.R2_PUBLIC_URL}/${imageUrl}`,
       },
     });
     return NextResponse.json(
