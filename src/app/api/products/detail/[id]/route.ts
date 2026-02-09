@@ -27,17 +27,10 @@ export async function GET(
     }
 
     // Map images to full URLs
-    const images = (product.image as Record<string, string>) || {};
-    const mappedImages = Object.fromEntries(
-      Object.entries(images).map(([original, path]) => [
-        original,
-        `${process.env.R2_PUBLIC_URL}/${path}`,
-      ])
-    );
 
     const productWithUrls = {
       ...product,
-      image: mappedImages,
+
       category : product.category.name, 
     };
 

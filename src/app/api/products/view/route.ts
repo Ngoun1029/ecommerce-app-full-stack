@@ -27,7 +27,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       // pick the first image in the object as "mainImage"
       const firstImage = Object.values(images)[0] || null;
       const mainImage = firstImage
-        ? `${process.env.R2_PUBLIC_URL}/${firstImage}`
+        ? firstImage
         : null;
 
       return {

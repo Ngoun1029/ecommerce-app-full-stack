@@ -51,24 +51,17 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
     // Map mainImage
     const productsWithMainImage = products.map((product) => {
-      // Customize category field
-      const category = product.category
-        ? {
-            id: product.category.id,
-            name: product.category.name,
-            status: product.category.status,
-          }
-        : null;
+    
       const images = (product.image as Record<string, string>) || {};
       const firstImage = Object.values(images)[0] || null;
       const mainImage = firstImage
-        ? `${process.env.R2_PUBLIC_URL}/${firstImage}`
+        ? firstImage
         : null;
 
       return {
         ...product,
         image: mainImage,
-        category,
+        category: product.category.name,
       };
     });
 

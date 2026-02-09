@@ -95,7 +95,7 @@ export async function multipleUploadFile({
         type: extension,
       });
 
-      result[originalName] = storedPath;
+      result[originalName] = `${process.env.R2_PUBLIC_URL}/${storedPath}`;
     } catch {
       // fallback → UUID (Edge-safe)
       const fallbackName = `${uuidv4()}.${extension}`;

@@ -37,7 +37,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     await prisma.categories.create({
       data: {
         name,
-        image: imageUrl,
+        image: `${process.env.R2_PUBLIC_URL}/${imageUrl}`,
         status: status ?? false,
       },
     });

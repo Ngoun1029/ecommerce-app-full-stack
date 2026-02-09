@@ -10,14 +10,9 @@ export async function GET(
     const { id } = await params;
 
     // fetch a single product with category relation
-    const product = await findOneWithRelations(
-      "products",
-      Number(id),
-      "id",
-      {
-        category: true, // include category
-      },
-    );
+    const product = await findOneWithRelations("products", Number(id), "id", {
+      category: true,
+    });
 
     if (!product) {
       return NextResponse.json(
@@ -26,34 +21,15 @@ export async function GET(
       );
     }
 
-    // Map images to full URLs
-    const images = (product.image as Record<string, string>) || {};
-    const mappedImages = Object.fromEntries(
-      Object.entries(images).map(([original, path]) => [
-        original,
-        `${process.env.R2_PUBLIC_URL}/${path}`,
-      ])
-    );
-
-    // Customize category field
-    const category = product.category
-      ? {
-          id: product.category.id,
-          name: product.category.name,
-          status: product.category.status,
-        }
-      : null;
-
-    const productWithUrls = {
+    const products = {
       ...product,
-      image: mappedImages,
-      category,
+      category: product.category.name,
     };
 
     return NextResponse.json(
       {
         status: "success",
-        data: productWithUrls,
+        data: products,
       },
       { status: 200 },
     );
