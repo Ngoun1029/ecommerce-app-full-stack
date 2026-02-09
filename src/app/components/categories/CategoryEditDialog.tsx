@@ -1,19 +1,19 @@
 "use client";
 
-import { Props } from "@/app/types/CreateProp";
+import { EditProps } from "@/app/types/EditProps";
 import { useEffect, useRef, useState } from "react";
 
 type Errors = Partial<Record<"name" | "image", string>>;
 
-export default function CategoryCreateDialog({
+export default function CategoryEditDialog({
   open,
   setOpen,
+  id,
   onSuccess,
-}: Props) {
+}: EditProps) {
   const [mounted, setMounted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Errors>({});
-
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [form, setForm] = useState({
@@ -24,6 +24,42 @@ export default function CategoryCreateDialog({
 
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
+  /* ---------------- Fetch Detail ---------------- */
+  useEffect(() => {
+    if (!open || !id) return;
+
+    const fetchDetail = async () => {
+      try {
+        const res = await fetch(`/api/categories/detail/${id}`);
+        if (!res.ok) throw new Error("Failed");
+
+        const data = await res.json();
+
+        setForm({
+          name: data.data.name ?? "", // ✅ never undefined
+          image: null,
+          status: Boolean(data.data.status),
+        });
+
+        if (typeof data.data.image === "string" && data.data.image.length > 0) {
+          setImagePreview(
+            data.data.image.startsWith("http")
+              ? data.data.image
+              : `${process.env.R2_PUBLIC_URL}/${data.data.image}`,
+          );
+        } else {
+          setImagePreview(null);
+        }
+
+        console.log(data.data.image);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchDetail();
+  }, [open, id]);
+
   /* ---------------- Mount Animation ---------------- */
   useEffect(() => {
     if (open) setMounted(true);
@@ -32,75 +68,73 @@ export default function CategoryCreateDialog({
 
   if (!mounted) return null;
 
-  /* ---------------- Open File Picker ---------------- */
   const openFilePicker = () => {
     fileInputRef.current?.click();
   };
 
-  /* ---------------- Validation ---------------- */
-  const validate = () => {
-    const e: Errors = {};
-
-    if (!form.name.trim()) e.name = "Name is required";
-    if (!form.image) e.image = "Image is required";
-
-    setErrors(e);
-
-    return Object.keys(e).length === 0;
-  };
-
-  /* ---------------- Image Change ---------------- */
+  /* ---------------- Handle Image Change ---------------- */
   const onImageChange = (file: File | null) => {
     setForm((f) => ({ ...f, image: file }));
 
-    if (!file) return;
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setImagePreview(url);
 
-    const url = URL.createObjectURL(file);
-    setImagePreview(url);
-
-    return () => URL.revokeObjectURL(url);
+      return () => URL.revokeObjectURL(url);
+    }
   };
 
   /* ---------------- Submit ---------------- */
-  const submit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const submit = async () => {
+    if (!id) return;
 
-    if (!validate()) return;
+    setErrors({});
+
+    if (!form.name.trim()) {
+      setErrors({ name: "Name is required" });
+      return;
+    }
 
     try {
       setLoading(true);
 
-      const fd = new FormData();
+      // 1️⃣ Upload image if changed
+      if (form.image) {
+        const fd = new FormData();
+        fd.append("image", form.image);
 
-      fd.append("name", form.name);
-      fd.append("image", form.image!);
-      fd.append("status", String(form.status));
+        const imgRes = await fetch(`/api/categories/update/${id}`, {
+          method: "POST",
+          body: fd,
+        });
 
-      const res = await fetch("/api/category/create", {
-        method: "POST",
-        body: fd,
+        if (!imgRes.ok) throw new Error("Image update failed");
+      }
+
+      // 2️⃣ Update name + status
+      const res = await fetch(`/api/categories/update/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: form.name,
+          status: form.status,
+        }),
       });
 
-      if (!res.ok) throw new Error("Create failed");
-
-      // Reset
-      setForm({
-        name: "",
-        image: null,
-        status: true,
-      });
-
-      setImagePreview(null);
+      if (!res.ok) throw new Error("Update failed");
 
       onSuccess?.();
       setOpen(false);
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.error(error);
     } finally {
       setLoading(false);
     }
   };
 
+  /* ---------------- UI ---------------- */
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
       {/* Backdrop */}
@@ -115,9 +149,9 @@ export default function CategoryCreateDialog({
         <div className="flex items-center justify-between px-6 py-5 border-b">
           <div>
             <h2 className="text-lg font-semibold text-gray-900">
-              Add Category
+              Edit Category
             </h2>
-            <p className="text-xs text-gray-500">Create a new category</p>
+            <p className="text-xs text-gray-500">Update category information</p>
           </div>
 
           <button
@@ -162,20 +196,16 @@ export default function CategoryCreateDialog({
 
                 {/* Hover */}
                 <div className="absolute inset-0 flex items-center justify-center bg-black/40 text-white text-xs opacity-0 transition group-hover:opacity-100">
-                  Upload
+                  Change
                 </div>
               </div>
 
               {/* Hint */}
               <div className="text-xs text-gray-500 leading-relaxed">
-                Click image to upload <br />
+                Click image to change <br />
                 JPG / PNG / WEBP
               </div>
             </div>
-
-            {errors.image && (
-              <p className="mt-1 text-xs text-red-500">{errors.image}</p>
-            )}
 
             <input
               ref={fileInputRef}
@@ -223,7 +253,7 @@ export default function CategoryCreateDialog({
             disabled={loading}
             className="rounded-xl bg-primary px-5 py-2.5 text-sm font-medium hover:text-gray-700 text-black shadow-sm transition hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? "Saving..." : "Create Category"}
+            {loading ? "Saving..." : "Save Changes"}
           </button>
         </div>
       </div>

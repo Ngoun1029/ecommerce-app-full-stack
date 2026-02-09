@@ -35,19 +35,10 @@ export async function GET(
       ])
     );
 
-    // Customize category field
-    const category = product.category
-      ? {
-          id: product.category.id,
-          name: product.category.name,
-          status: product.category.status,
-        }
-      : null;
-
     const productWithUrls = {
       ...product,
       image: mappedImages,
-      category, // replace original category object with custom one
+      category : product.category.name, 
     };
 
     return NextResponse.json(

@@ -3,9 +3,9 @@
 import { PaginatedResponse } from "@/app/types/PaginationResponse";
 import { useCallback, useState } from "react";
 
-export function usePagination<T>(endpoint: string, limit = 10) {
+export function usePagination<T>(endpoint: string, limit = 5) {
   const [items, setItems] = useState<T[]>([]);
-  const [offset, setOffset] = useState(0); // ✅ start from 0
+  const [offset, setOffset] = useState(0); 
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [error, setError] = useState<string | null>(null);

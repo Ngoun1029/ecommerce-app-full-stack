@@ -59,3 +59,8 @@ export type Categories = Prisma.CategoriesModel
  * 
  */
 export type Products = Prisma.ProductsModel
+/**
+ * Model Banners
+ * 
+ */
+export type Banners = Prisma.BannersModel

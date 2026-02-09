@@ -6,29 +6,19 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const { searchParams } = new URL(request.url);
     const page = Math.max(Number(searchParams.get("page") ?? 1));
     const perPage = Math.max(Number(searchParams.get("perPage") ?? 10));
-    const [users, total] = await Promise.all([
-      prisma.users.findMany({
+
+    const [banners, total] = await Promise.all([
+      prisma.banners.findMany({
         skip: (page - 1) * perPage,
         take: perPage,
         orderBy: { createdAt: "desc" },
-        include:{
-            role: true,
-        }
       }),
-      prisma.users.count(),
+      prisma.banners.count(),
     ]);
-
-    const userWithImageUrl = users.map((user)=>{
-        return {
-            ...user,
-            image: process.env.R2_PUBLIC_URL + "/" + user.image,
-            role: user.role.name,
-        }
-    })
     return NextResponse.json(
       {
-        status: "success",
-        data: userWithImageUrl,
+        status: "successធ",
+        data: banners,
         meta: {
           current_page: page,
           per_page: perPage,
@@ -44,7 +34,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         status: "error",
         message: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 },
+      {
+        status: 500,
+      },
     );
   }
 }

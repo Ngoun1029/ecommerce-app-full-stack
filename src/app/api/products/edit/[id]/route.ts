@@ -6,7 +6,6 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> },
 ): Promise<NextResponse> {
   try {
-
     const body : {status : boolean} = await request.json();
     await prisma.products.update({
         where: {id: Number((await params).id)},
@@ -15,7 +14,10 @@ export async function PATCH(
         }
     });
     return NextResponse.json({
-        
+        status: "success",
+        message: "update successfully",
+    }, {
+      status: 500
     });
   } catch (error) {
     return NextResponse.json(

@@ -1,31 +1,32 @@
-import { RoleRequest } from "@/app/types/request/RoleRequest";
-import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "../../../../../lib/prisma";
 
-export async function POST(request: NextRequest): Promise<NextResponse> {
+export async function POST(request: Request) {
   try {
-    const body: RoleRequest = await request.json();
-    await prisma.roles.create({
-      data: {
-        name: body.name.trim(),
-      },
+    const body = await request.json();
+    const { name } = body;
+
+    // Check if role exists
+    const exists = await prisma.roles.findUnique({ where: { name } });
+    if (exists) {
+      return new Response(
+        JSON.stringify({ status: "error", message: "Role already exists" }),
+        { status: 400 },
+      );
+    }
+
+    // Create new role
+    const role = await prisma.roles.create({
+      data: { name },
     });
-    return NextResponse.json(
-      {
-        status: "success",
-        message: "Role created successfully",
-      },
-      { status: 201 },
-    );
-  } catch (error: unknown) {
-    return NextResponse.json(
-      {
-        status: "error",
-        message: error instanceof Error ? error.message : "Unknown error",
-      },
-      {
-        status: 500,
-      },
+
+    return new Response(JSON.stringify({ status: "success", role }), {
+      status: 201,
+    });
+  } catch (error) {
+    console.error(error);
+    return new Response(
+      JSON.stringify({ status: "error", message: "Something went wrong" }),
+      { status: 500 },
     );
   }
 }

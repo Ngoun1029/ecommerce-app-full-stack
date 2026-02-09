@@ -14,6 +14,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         skip,
         take: perPage,
         orderBy: { createdAt: "desc" },
+        include: {
+            category: true,
+        }
       }),
       prisma.products.count(),
     ]);
@@ -29,6 +32,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
       return {
         ...product,
+        category: product.category.name,
         image: mainImage, // ✅ new single image field
       };
     });

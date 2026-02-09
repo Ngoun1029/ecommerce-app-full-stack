@@ -7,10 +7,13 @@ import { useMemo, useState } from "react";
 import { Pagination } from "@/app/components/ui/pagination";
 import DataTable from "@/app/components/ui/DataTable";
 import ProductAddDialog from "@/app/components/products/ProductAddDialog";
+import ProductDetailDialog from "@/app/components/products/ProductDetailDialog";
+import { FaEdit } from "react-icons/fa";
 
 export default function ProductsPage() {
-  const [open, setOpen] = useState(false);
-
+  const [openCreateDialog, setOpenCreateDialog] = useState(false);
+  const [openDetailDialog, setOpenDetailDialog] = useState(false);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
   const [page, setPage] = useState(1);
   const { data, isLoading, isError, error } = useProductsData(page);
   console.log(data);
@@ -97,6 +100,18 @@ export default function ProductsPage() {
           <span>{new Date(row.updatedAt).toLocaleDateString()}</span>
         ),
       },
+      {
+        key: "actions",
+        header: "",
+        clickable: false,
+        render: (row) => (
+          <div className="flex justify-end gap-3">
+            <button className="text-blue-400 hover:text-blue-300">
+              <FaEdit />
+            </button>
+          </div>
+        ),
+      },
     ],
     [],
   );
@@ -104,23 +119,38 @@ export default function ProductsPage() {
   return (
     <div className="space-y-6">
       <ProductAddDialog
-        open={open}
-        setOpen={setOpen}
+        open={openCreateDialog}
+        setOpen={setOpenCreateDialog}
         onSuccess={() => {
-          setPage(1); // reset to first page
-          // refetch(); // if using react-query
+          setPage(1);
         }}
+      />
+      <ProductDetailDialog
+        open={openDetailDialog}
+        setOpen={setOpenDetailDialog}
+        id={selectedId}
       />
       <div className="rounded-2xl space-y-1">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold">Categories</h2>
+          <div>
+            <h2 className="text-xl font-semibold text-gray-900">
+              Products Management
+            </h2>
+            <p className="text-sm text-gray-500">
+              Manage your products, pricing, and images
+            </p>
+          </div>
 
           <button
-            onClick={() => setOpen(true)}
-            
+            onClick={() => setOpenCreateDialog(true)}
+            className="inline-flex items-center gap-2 px-5 py-2.5 
+                 bg-linear-to-r from-blue-600 to-indigo-600 
+                 text-white text-sm font-medium rounded-xl
+                 shadow-lg shadow-blue-500/30
+                 hover:shadow-xl hover:scale-[1.02]
+                 transition-all"
           >
-            <span className="text-base leading-none">＋</span>
-            Add Category
+            ＋ Add Product
           </button>
         </div>
 
@@ -131,6 +161,10 @@ export default function ProductsPage() {
             data={data?.data ?? []}
             columns={columns}
             emptyText={isLoading ? "Loading..." : "No categories found"}
+            onRowClick={(row) => {
+              setSelectedId(row.id);
+              setOpenDetailDialog(true);
+            }}
           />
         )}
 

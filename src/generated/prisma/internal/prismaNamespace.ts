@@ -387,7 +387,8 @@ export const ModelName = {
   Roles: 'Roles',
   Users: 'Users',
   Categories: 'Categories',
-  Products: 'Products'
+  Products: 'Products',
+  Banners: 'Banners'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -403,7 +404,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "roles" | "users" | "categories" | "products"
+    modelProps: "roles" | "users" | "categories" | "products" | "banners"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -703,6 +704,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Banners: {
+      payload: Prisma.$BannersPayload<ExtArgs>
+      fields: Prisma.BannersFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.BannersFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BannersPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.BannersFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BannersPayload>
+        }
+        findFirst: {
+          args: Prisma.BannersFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BannersPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.BannersFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BannersPayload>
+        }
+        findMany: {
+          args: Prisma.BannersFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BannersPayload>[]
+        }
+        create: {
+          args: Prisma.BannersCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BannersPayload>
+        }
+        createMany: {
+          args: Prisma.BannersCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.BannersCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BannersPayload>[]
+        }
+        delete: {
+          args: Prisma.BannersDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BannersPayload>
+        }
+        update: {
+          args: Prisma.BannersUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BannersPayload>
+        }
+        deleteMany: {
+          args: Prisma.BannersDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.BannersUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.BannersUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BannersPayload>[]
+        }
+        upsert: {
+          args: Prisma.BannersUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BannersPayload>
+        }
+        aggregate: {
+          args: Prisma.BannersAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateBanners>
+        }
+        groupBy: {
+          args: Prisma.BannersGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BannersGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.BannersCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BannersCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -793,6 +868,19 @@ export const ProductsScalarFieldEnum = {
 } as const
 
 export type ProductsScalarFieldEnum = (typeof ProductsScalarFieldEnum)[keyof typeof ProductsScalarFieldEnum]
+
+
+export const BannersScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  image: 'image',
+  description: 'description',
+  link: 'link',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BannersScalarFieldEnum = (typeof BannersScalarFieldEnum)[keyof typeof BannersScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1016,6 +1104,7 @@ export type GlobalOmitConfig = {
   users?: Prisma.UsersOmit
   categories?: Prisma.CategoriesOmit
   products?: Prisma.ProductsOmit
+  banners?: Prisma.BannersOmit
 }
 
 /* Types for Logging */

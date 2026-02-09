@@ -16,16 +16,17 @@ export default function DataTable<T>({
   emptyText = "No data found",
 }: Props<T>) {
   return (
-    <div className="bg-white border border-gray-200 rounded-2xl shadow-md overflow-hidden">
+    <div className="relative overflow-hidden">
       <div className="overflow-x-auto">
         <table className="min-w-full text-sm">
           {/* Header */}
-          <thead className="bg-gray-50 border-b border-gray-200">
+          <thead className="bg-gray-50/80 backdrop-blur border-b border-gray-100">
             <tr>
               {columns.map((col) => (
                 <th
                   key={col.key}
-                  className="px-6 py-3 text-left text-xs font-semibold uppercase text-gray-500 tracking-wide"
+                  className="px-6 py-4 text-left text-xs font-semibold 
+                             uppercase tracking-wide text-gray-500"
                 >
                   {col.header}
                 </th>
@@ -40,8 +41,8 @@ export default function DataTable<T>({
                 <tr
                   key={i}
                   onClick={() => onRowClick?.(row)}
-                  className={`transition-colors duration-200 ${
-                    onRowClick ? "cursor-pointer hover:bg-blue-50" : ""
+                  className={`group transition-all duration-200 ${
+                    onRowClick ? "cursor-pointer hover:bg-blue-50/60" : ""
                   }`}
                 >
                   {columns.map((col) => (
@@ -50,20 +51,22 @@ export default function DataTable<T>({
                       onClick={(e) =>
                         col.clickable === false && e.stopPropagation()
                       }
-                      className="px-6 py-4 text-gray-700 whitespace-nowrap"
+                      className="px-6 py-4 text-gray-700"
                     >
-                      {col.render(row)}
+                      <div className="flex items-center gap-2">
+                        {col.render(row)}
+                      </div>
                     </td>
                   ))}
                 </tr>
               ))
             ) : (
               <tr>
-                <td
-                  colSpan={columns.length}
-                  className="px-6 py-10 text-center text-sm text-gray-400"
-                >
-                  {emptyText}
+                <td colSpan={columns.length} className="px-6 py-14 text-center">
+                  <div className="flex flex-col items-center gap-2 text-gray-400">
+                    <span className="text-sm">{emptyText}</span>
+                    <span className="text-xs">Try creating a new product</span>
+                  </div>
                 </td>
               </tr>
             )}

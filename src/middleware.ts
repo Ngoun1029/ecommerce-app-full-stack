@@ -8,7 +8,8 @@ const publicPaths = [
   "/api/auths/registers",
   "/api/categories/client-view",
   "/api/products/client-view",
-  "/api/products/client-detail", // remove :path*, handle in code
+  "/api/products/client-detail",
+  "/api/banners/client-view",
 ];
 export async function middleware(req: NextRequest) {
   try {

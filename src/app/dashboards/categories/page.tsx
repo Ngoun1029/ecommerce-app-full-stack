@@ -9,11 +9,16 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import { useCategoriesData } from "../../../../hooks/categories-hooks";
 import { useRouter } from "next/navigation";
 import CategoryCreateDialog from "@/app/components/categories/CategoryAddDialog";
+import CategoryEditDialog from "@/app/components/categories/CategoryEditDialog";
+import CategoryDetailDialog from "@/app/components/categories/CategoryDetailDialog";
 
 export default function CategoriesPage() {
   const router = useRouter();
   const [page, setPage] = useState(1);
-  const [open, setOpen] = useState(false);
+  const [openCreateDialog, setOpenCreateDialog] = useState(false);
+  const [openEditDialog, setOpenEditDialog] = useState(false);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [openDetailDialog, setOpenDetailDialog] = useState(false);
 
   const { data, isLoading, isError, error } = useCategoriesData(page);
   if (isError || error) {
@@ -25,6 +30,7 @@ export default function CategoriesPage() {
       {
         key: "id",
         header: "ID",
+
         render: (row) => (
           <span className="font-medium text-black">{row.id}</span>
         ),
@@ -36,7 +42,6 @@ export default function CategoriesPage() {
           <span className="font-medium text-black">{row.name}</span>
         ),
       },
-
       {
         key: "status",
         header: "Status",
@@ -64,11 +69,14 @@ export default function CategoriesPage() {
         clickable: false,
         render: (row) => (
           <div className="flex justify-end gap-3">
-            <button className="text-blue-400 hover:text-blue-300">
+            <button
+              onClick={() => {
+                setSelectedId(row.id);
+                setOpenEditDialog(true);
+              }}
+              className="text-blue-400 hover:text-blue-300"
+            >
               <FaEdit />
-            </button>
-            <button className="text-red-400 hover:text-red-300">
-              <FaTrash />
             </button>
           </div>
         ),
@@ -80,31 +88,39 @@ export default function CategoriesPage() {
   return (
     <div className="space-y-6">
       <CategoryCreateDialog
-        open={open}
-        setOpen={setOpen}
+        open={openCreateDialog}
+        setOpen={setOpenCreateDialog}
         onSuccess={() => {
-          setPage(1); // reset to first page
-          // refetch(); // if using react-query
+          setPage(1);
         }}
       />
+
+      <CategoryDetailDialog
+        open={openDetailDialog}
+        setOpen={setOpenDetailDialog}
+        id={selectedId}
+      />
+
+      <CategoryEditDialog
+        open={openEditDialog}
+        setOpen={setOpenEditDialog}
+        id={selectedId}
+        onSuccess={() => {
+          setOpenEditDialog(false);
+          setPage(1);
+        }}
+      />
+
       <div className="rounded-2xl space-y-1">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold">Categories</h2>
+          <h2 className="text-lg font-semibold">Categories Management</h2>
 
           <button
-            onClick={() => setOpen(true)}
-            className="
-    inline-flex items-center gap-2
-    rounded-xl border border-primary/20
-    bg-primary/10 px-4 py-2
-    text-sm font-medium text-primary
-    transition
-    hover:bg-primary/20
-    active:scale-[0.98]
-  "
+            onClick={() => setOpenCreateDialog(true)}
+            className="flex items-center gap-2 px-5 py-3 bg-blue-600 text-white font-medium rounded-lg shadow-md hover:bg-blue-700 hover:shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
           >
-            <span className="text-base leading-none">＋</span>
-            Add Category
+            <span className="text-lg leading-none">＋</span>
+            Add
           </button>
         </div>
 
@@ -115,6 +131,10 @@ export default function CategoriesPage() {
             data={data?.data ?? []}
             columns={columns}
             emptyText={isLoading ? "Loading..." : "No categories found"}
+            onRowClick={(row) => {
+              setSelectedId(row.id);
+              setOpenDetailDialog(true);
+            }}
           />
         )}
 

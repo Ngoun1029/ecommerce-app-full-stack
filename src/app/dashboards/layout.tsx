@@ -8,6 +8,7 @@ import { FaHome, FaLayerGroup } from "react-icons/fa";
 
 import { FaBars, FaChartLine } from "react-icons/fa6";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { User } from "lucide-react";
 
 export const navSections = [
   {
@@ -34,10 +35,13 @@ export const navSections = [
         icon: <FaLayerGroup />,
       },
       {
-
         label: "Role",
         href: "/dashboards/roles",
-      
+      },
+      {
+        label: "Users",
+        href: "/dashboards/users",
+        icon: <User/>
       },
     ],
   },

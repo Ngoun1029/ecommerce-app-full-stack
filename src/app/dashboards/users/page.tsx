@@ -1,19 +1,17 @@
 "use client";
 
-import { Column } from "@/app/types/Column";
-import { useRolesData } from "../../../../hooks/roles-hook";
-import { RoleResponse } from "@/app/types/response/RoleResponse";
 import { useMemo, useState } from "react";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { useUsersData } from "../../../../hooks/users-hook";
 import { Pagination } from "@/app/components/ui/pagination";
 import DataTable from "@/app/components/ui/DataTable";
-import RoleAddDialog from "@/app/components/roles/RoleAddDialog";
+import { Column } from "@/app/types/Column";
+import { UserResponse } from "@/app/types/response/UserResponse";
+import { FaEdit } from "react-icons/fa";
 
-export default function RolesPage() {
-  const [openCreateDialog, setOpenCreateDialog] = useState(false);
+export default function UsersPage() {
   const [page, setPage] = useState(1);
-  const { data, isLoading, isError, error } = useRolesData(page);
-  const columns: Column<RoleResponse>[] = useMemo(
+  const { data, isLoading, isError, error } = useUsersData(page);
+  const columns: Column<UserResponse>[] = useMemo(
     () => [
       {
         key: "id",
@@ -27,6 +25,31 @@ export default function RolesPage() {
         header: "Name",
         render: (row) => (
           <span className="font-medium text-black">{row.name}</span>
+        ),
+      },
+      {
+        key: "image",
+        header: "Image",
+        render: (row) => (
+          <img
+            src={row.image}
+            alt={row.name}
+            className="w-10 h-10 object-cover rounded"
+          />
+        ),
+      },
+      {
+        key: "email",
+        header: "Email",
+        render: (row) => (
+          <span className="font-medium text-black">{row.email}</span>
+        ),
+      },
+      {
+        key: "role",
+        header: "Role",
+        render: (row) => (
+          <span className="font-medium text-black">{row.role}</span>
         ),
       },
       {
@@ -51,25 +74,10 @@ export default function RolesPage() {
   );
   return (
     <div className="space-y-6">
-
-      <RoleAddDialog
-        open={openCreateDialog}
-        setOpen={setOpenCreateDialog}
-        onSuccess={()=>{
-
-        }}
-      />
       <div className="rounded-2xl space-y-1">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold">Role Management</h2>
+          <h2 className="text-lg font-semibold">User Management</h2>
 
-          <button
-            onClick={() => setOpenCreateDialog(true)}
-            className="flex items-center gap-2 px-5 py-3 bg-blue-600 text-white font-medium rounded-lg shadow-md hover:bg-blue-700 hover:shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
-          >
-            <span className="text-lg leading-none">＋</span>
-            Add
-          </button>
         </div>
         {isError ? (
           <div className="p-10 text-center text-red-400">{error?.message}</div>
