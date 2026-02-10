@@ -7,9 +7,12 @@ import DataTable from "@/app/components/ui/DataTable";
 import { Column } from "@/app/types/Column";
 import { UserResponse } from "@/app/types/response/UserResponse";
 import { FaEdit } from "react-icons/fa";
+import UserDetailDialog from "@/app/components/users/UserDetailDialog";
 
 export default function UsersPage() {
   const [page, setPage] = useState(1);
+  const [openDetailDialog, setOpenDetailDialog] = useState(false);
+  const [selectedId, setSelectedId] = useState<Number | null>(null);
   const { data, isLoading, isError, error } = useUsersData(page);
   const columns: Column<UserResponse>[] = useMemo(
     () => [
@@ -74,10 +77,14 @@ export default function UsersPage() {
   );
   return (
     <div className="space-y-6">
+      <UserDetailDialog
+        open={openDetailDialog}
+        setOpen={setOpenDetailDialog}
+        id={Number(selectedId)}
+      />
       <div className="rounded-2xl space-y-1">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold">User Management</h2>
-
         </div>
         {isError ? (
           <div className="p-10 text-center text-red-400">{error?.message}</div>
@@ -86,6 +93,10 @@ export default function UsersPage() {
             data={data?.data ?? []}
             columns={columns}
             emptyText={isLoading ? "Loading..." : "No Roles found"}
+            onRowClick={(row) => {
+              setSelectedId(row.id);
+              setOpenDetailDialog(true);
+            }}
           />
         )}
 

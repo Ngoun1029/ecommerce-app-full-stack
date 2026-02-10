@@ -28,7 +28,7 @@ export default function ProductAddDialog({ open, setOpen }: Props) {
 
   const [category, setCategory] = useState<CategoryResponse | null>(null);
   const [images, setImages] = useState<File[]>([]);
-  const [previews, setPreviews] = useState<string[]>([]);
+  const [previews, setPreviews] = useState<string[]>([]); 
 
   /* ---------------- Mount Animation ---------------- */
   useEffect(() => {

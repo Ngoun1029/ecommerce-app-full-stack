@@ -4,11 +4,18 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
-import { FaHome, FaLayerGroup } from "react-icons/fa";
+import {
+  FaHome,
+  FaChartLine,
+  FaBoxOpen,
+  FaTags,
+  FaUsers,
+  FaUserShield,
+  FaEnvelope,
+} from "react-icons/fa";
 
-import { FaBars, FaChartLine } from "react-icons/fa6";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { User } from "lucide-react";
+import { FaBars } from "react-icons/fa6";
 
 export const navSections = [
   {
@@ -25,23 +32,33 @@ export const navSections = [
         icon: <FaChartLine />,
       },
       {
+        label: "Banners",
+        href: "/dashboards/banners"
+      },
+      {
         label: "Products",
         href: "/dashboards/products",
-        icon: <FaLayerGroup />,
+        icon: <FaBoxOpen />,
       },
       {
         label: "Category",
         href: "/dashboards/categories",
-        icon: <FaLayerGroup />,
-      },
-      {
-        label: "Role",
-        href: "/dashboards/roles",
+        icon: <FaTags />,
       },
       {
         label: "Users",
         href: "/dashboards/users",
-        icon: <User/>
+        icon: <FaUsers />,
+      },
+      {
+        label: "Role",
+        href: "/dashboards/roles",
+        icon: <FaUserShield />,
+      },
+      {
+        label: "Contact",
+        href: "/dashboards/contact",
+        icon: <FaEnvelope />,
       },
     ],
   },

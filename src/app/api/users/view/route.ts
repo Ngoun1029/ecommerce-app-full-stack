@@ -21,7 +21,6 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const userWithImageUrl = users.map((user)=>{
         return {
             ...user,
-            image: process.env.R2_PUBLIC_URL + "/" + user.image,
             role: user.role.name,
         }
     })

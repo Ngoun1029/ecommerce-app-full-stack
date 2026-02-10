@@ -9,10 +9,12 @@ import DataTable from "@/app/components/ui/DataTable";
 import ProductAddDialog from "@/app/components/products/ProductAddDialog";
 import ProductDetailDialog from "@/app/components/products/ProductDetailDialog";
 import { FaEdit } from "react-icons/fa";
+import ProductEditDialog from "@/app/components/products/ProductEditDialog";
 
 export default function ProductsPage() {
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
   const [openDetailDialog, setOpenDetailDialog] = useState(false);
+  const [openEditDialog, setOpenEditDialog] = useState(false);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [page, setPage] = useState(1);
   const { data, isLoading, isError, error } = useProductsData(page);
@@ -106,7 +108,13 @@ export default function ProductsPage() {
         clickable: false,
         render: (row) => (
           <div className="flex justify-end gap-3">
-            <button className="text-blue-400 hover:text-blue-300">
+            <button
+              onClick={() => {
+                setOpenEditDialog(true);
+                setSelectedId(row.id);
+              }}
+              className="text-blue-400 hover:text-blue-300"
+            >
               <FaEdit />
             </button>
           </div>
@@ -129,6 +137,13 @@ export default function ProductsPage() {
         open={openDetailDialog}
         setOpen={setOpenDetailDialog}
         id={selectedId}
+      />
+
+      <ProductEditDialog
+        open={openEditDialog}
+        setOpen={setOpenEditDialog}
+        id={selectedId}
+        onSuccess={() => {}}
       />
       <div className="rounded-2xl space-y-1">
         <div className="flex items-center justify-between">
