@@ -1,14 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, ReactNode } from "react";
 import { ChevronDown } from "lucide-react";
 
-type Item = {
+type BaseItem = {
   id: number | string;
-  name: string;
 };
 
-type Props<T extends Item> = {
+type Props<T extends BaseItem> = {
   label?: string;
   placeholder?: string;
   value?: T | null;
@@ -17,9 +16,13 @@ type Props<T extends Item> = {
   hasMore: boolean;
   fetchMore: () => void;
   onChange: (item: T) => void;
+
+  // ✅ Custom render
+  renderItem?: (item: T, selected: boolean) => ReactNode;
+  renderValue?: (item: T) => ReactNode;
 };
 
-export default function DropDown<T extends Item>({
+export default function DropDown<T extends BaseItem>({
   label,
   placeholder = "Select",
   value,
@@ -28,6 +31,8 @@ export default function DropDown<T extends Item>({
   hasMore,
   fetchMore,
   onChange,
+  renderItem,
+  renderValue,
 }: Props<T>) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -46,7 +51,6 @@ export default function DropDown<T extends Item>({
     };
 
     document.addEventListener("mousedown", handleClick);
-
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
@@ -74,19 +78,17 @@ export default function DropDown<T extends Item>({
         onClick={() => setOpen((p) => !p)}
         className="flex w-full items-center justify-between rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
       >
-        <span
-          className={`${
-            value ? "text-gray-800" : "text-gray-400"
-          }`}
-        >
-          {value?.name || placeholder}
+        <span className="flex items-center gap-2 truncate">
+          {value
+            ? renderValue
+              ? renderValue(value)
+              : (value as any).name
+            : placeholder}
         </span>
 
         <ChevronDown
           size={18}
-          className={`transition ${
-            open ? "rotate-180" : ""
-          }`}
+          className={`transition ${open ? "rotate-180" : ""}`}
         />
       </button>
 
@@ -94,25 +96,35 @@ export default function DropDown<T extends Item>({
       {open && (
         <div
           onScroll={handleScroll}
-          className="absolute z-30 mt-2 max-h-52 w-full overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-lg"
+          className="absolute z-30 mt-2 max-h-56 w-full overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-lg"
         >
           {/* Items */}
-          {items.map((item) => (
-            <div
-              key={item.id}
-              onClick={() => {
-                onChange(item);
-                setOpen(false);
-              }}
-              className={`cursor-pointer px-4 py-2 text-sm transition hover:bg-blue-50 ${
-                value?.id === item.id
-                  ? "bg-blue-100 text-blue-700"
-                  : "text-gray-700"
-              }`}
-            >
-              {item.name}
-            </div>
-          ))}
+          {items.map((item) => {
+            const selected = value?.id === item.id;
+
+            return (
+              <div
+                key={item.id}
+                onClick={() => {
+                  onChange(item);
+                  setOpen(false);
+                }}
+                className={`flex items-center gap-3 px-4 py-2 text-sm cursor-pointer transition
+                  ${
+                    selected
+                      ? "bg-blue-100 text-blue-700"
+                      : "text-gray-700 hover:bg-blue-50"
+                  }
+                `}
+              >
+                {renderItem ? (
+                  renderItem(item, selected)
+                ) : (
+                  <span>{(item as any).name}</span>
+                )}
+              </div>
+            );
+          })}
 
           {/* Loading */}
           {loading && (

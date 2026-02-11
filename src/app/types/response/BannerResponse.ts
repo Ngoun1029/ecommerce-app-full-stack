@@ -6,3 +6,4 @@ export type BannerResponse = {
   link: string;
   createdAt: string;
 };
+

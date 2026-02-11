@@ -45,7 +45,6 @@ export async function PATCH(
       { status: 200 },
     );
   } catch (error) {
-    console.error(error);
 
     return NextResponse.json(
       {
@@ -133,7 +132,6 @@ export async function POST(
       { status: 200 },
     );
   } catch (error) {
-    console.error("Update image error:", error);
 
     return NextResponse.json(
       {

@@ -10,7 +10,7 @@ type Errors = Partial<Record<"name" | "price" | "category" | "image", string>>;
 
 export default function ProductAddDialog({ open, setOpen }: Props) {
   const { items, loading, hasMore, fetchMore } =
-    usePagination<CategoryResponse>("/api/categories/lists", 10);
+    usePagination<CategoryResponse>("/api/categories/lists", 5);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -28,7 +28,7 @@ export default function ProductAddDialog({ open, setOpen }: Props) {
 
   const [category, setCategory] = useState<CategoryResponse | null>(null);
   const [images, setImages] = useState<File[]>([]);
-  const [previews, setPreviews] = useState<string[]>([]); 
+  const [previews, setPreviews] = useState<string[]>([]);
 
   /* ---------------- Mount Animation ---------------- */
   useEffect(() => {

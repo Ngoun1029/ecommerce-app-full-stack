@@ -19,12 +19,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
     const hasNextPage = offset + limit < total;
 
-    const categoryCustomResponse = category.map((category) => {
-      return {
-        id: category.id,
-        name: category.name,
-      };
-    });
+
     return NextResponse.json({
       status: "success",
       items: category,

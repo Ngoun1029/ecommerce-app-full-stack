@@ -27,11 +27,6 @@ export const navSections = [
         icon: <FaHome />,
       },
       {
-        label: "Analysis",
-        href: "/apps/analysis",
-        icon: <FaChartLine />,
-      },
-      {
         label: "Banners",
         href: "/dashboards/banners"
       },
@@ -54,11 +49,6 @@ export const navSections = [
         label: "Role",
         href: "/dashboards/roles",
         icon: <FaUserShield />,
-      },
-      {
-        label: "Contact",
-        href: "/dashboards/contact",
-        icon: <FaEnvelope />,
       },
     ],
   },

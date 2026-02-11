@@ -3,9 +3,9 @@
 import { PaginatedResponse } from "@/app/types/PaginationResponse";
 import { useCallback, useState } from "react";
 
-export function usePagination<T>(endpoint: string, limit = 5) {
+export function usePagination<T>(endpoint: string, limit: number) {
   const [items, setItems] = useState<T[]>([]);
-  const [offset, setOffset] = useState(0); 
+  const [offset, setOffset] = useState(0);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -16,9 +16,7 @@ export function usePagination<T>(endpoint: string, limit = 5) {
     try {
       setLoading(true);
 
-      const res = await fetch(
-        `${endpoint}?limit=${limit}&offset=${offset}`
-      );
+      const res = await fetch(`${endpoint}?limit=${limit}&offset=${offset}`);
 
       if (!res.ok) throw new Error("Failed to fetch");
 
@@ -26,7 +24,7 @@ export function usePagination<T>(endpoint: string, limit = 5) {
 
       setItems((prev) => [...prev, ...data.items]);
 
-      // ✅ safer offset update
+      // ✅ safer offset updateq
       setOffset((prev) => prev + data.items.length);
 
       setHasMore(data.hasNextPage);
