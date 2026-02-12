@@ -245,6 +245,8 @@ export type UsersWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Users"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Users"> | Date | string
   role?: Prisma.XOR<Prisma.RolesScalarRelationFilter, Prisma.RolesWhereInput>
+  shipping?: Prisma.ShippingsListRelationFilter
+  order?: Prisma.OrdersListRelationFilter
 }
 
 export type UsersOrderByWithRelationInput = {
@@ -257,6 +259,8 @@ export type UsersOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   role?: Prisma.RolesOrderByWithRelationInput
+  shipping?: Prisma.ShippingsOrderByRelationAggregateInput
+  order?: Prisma.OrdersOrderByRelationAggregateInput
 }
 
 export type UsersWhereUniqueInput = Prisma.AtLeast<{
@@ -272,6 +276,8 @@ export type UsersWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Users"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Users"> | Date | string
   role?: Prisma.XOR<Prisma.RolesScalarRelationFilter, Prisma.RolesWhereInput>
+  shipping?: Prisma.ShippingsListRelationFilter
+  order?: Prisma.OrdersListRelationFilter
 }, "id" | "email">
 
 export type UsersOrderByWithAggregationInput = {
@@ -312,6 +318,8 @@ export type UsersCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   role: Prisma.RolesCreateNestedOneWithoutUsersInput
+  shipping?: Prisma.ShippingsCreateNestedManyWithoutUserInput
+  order?: Prisma.OrdersCreateNestedManyWithoutUserInput
 }
 
 export type UsersUncheckedCreateInput = {
@@ -323,6 +331,8 @@ export type UsersUncheckedCreateInput = {
   roleId: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  shipping?: Prisma.ShippingsUncheckedCreateNestedManyWithoutUserInput
+  order?: Prisma.OrdersUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UsersUpdateInput = {
@@ -333,6 +343,8 @@ export type UsersUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   role?: Prisma.RolesUpdateOneRequiredWithoutUsersNestedInput
+  shipping?: Prisma.ShippingsUpdateManyWithoutUserNestedInput
+  order?: Prisma.OrdersUpdateManyWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateInput = {
@@ -344,6 +356,8 @@ export type UsersUncheckedUpdateInput = {
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  shipping?: Prisma.ShippingsUncheckedUpdateManyWithoutUserNestedInput
+  order?: Prisma.OrdersUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UsersCreateManyInput = {
@@ -430,6 +444,11 @@ export type UsersSumOrderByAggregateInput = {
   roleId?: Prisma.SortOrder
 }
 
+export type UsersScalarRelationFilter = {
+  is?: Prisma.UsersWhereInput
+  isNot?: Prisma.UsersWhereInput
+}
+
 export type UsersCreateNestedManyWithoutRoleInput = {
   create?: Prisma.XOR<Prisma.UsersCreateWithoutRoleInput, Prisma.UsersUncheckedCreateWithoutRoleInput> | Prisma.UsersCreateWithoutRoleInput[] | Prisma.UsersUncheckedCreateWithoutRoleInput[]
   connectOrCreate?: Prisma.UsersCreateOrConnectWithoutRoleInput | Prisma.UsersCreateOrConnectWithoutRoleInput[]
@@ -476,6 +495,34 @@ export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
 }
 
+export type UsersCreateNestedOneWithoutShippingInput = {
+  create?: Prisma.XOR<Prisma.UsersCreateWithoutShippingInput, Prisma.UsersUncheckedCreateWithoutShippingInput>
+  connectOrCreate?: Prisma.UsersCreateOrConnectWithoutShippingInput
+  connect?: Prisma.UsersWhereUniqueInput
+}
+
+export type UsersUpdateOneRequiredWithoutShippingNestedInput = {
+  create?: Prisma.XOR<Prisma.UsersCreateWithoutShippingInput, Prisma.UsersUncheckedCreateWithoutShippingInput>
+  connectOrCreate?: Prisma.UsersCreateOrConnectWithoutShippingInput
+  upsert?: Prisma.UsersUpsertWithoutShippingInput
+  connect?: Prisma.UsersWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UsersUpdateToOneWithWhereWithoutShippingInput, Prisma.UsersUpdateWithoutShippingInput>, Prisma.UsersUncheckedUpdateWithoutShippingInput>
+}
+
+export type UsersCreateNestedOneWithoutOrderInput = {
+  create?: Prisma.XOR<Prisma.UsersCreateWithoutOrderInput, Prisma.UsersUncheckedCreateWithoutOrderInput>
+  connectOrCreate?: Prisma.UsersCreateOrConnectWithoutOrderInput
+  connect?: Prisma.UsersWhereUniqueInput
+}
+
+export type UsersUpdateOneRequiredWithoutOrderNestedInput = {
+  create?: Prisma.XOR<Prisma.UsersCreateWithoutOrderInput, Prisma.UsersUncheckedCreateWithoutOrderInput>
+  connectOrCreate?: Prisma.UsersCreateOrConnectWithoutOrderInput
+  upsert?: Prisma.UsersUpsertWithoutOrderInput
+  connect?: Prisma.UsersWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UsersUpdateToOneWithWhereWithoutOrderInput, Prisma.UsersUpdateWithoutOrderInput>, Prisma.UsersUncheckedUpdateWithoutOrderInput>
+}
+
 export type UsersCreateWithoutRoleInput = {
   email: string
   name?: string | null
@@ -483,6 +530,8 @@ export type UsersCreateWithoutRoleInput = {
   image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  shipping?: Prisma.ShippingsCreateNestedManyWithoutUserInput
+  order?: Prisma.OrdersCreateNestedManyWithoutUserInput
 }
 
 export type UsersUncheckedCreateWithoutRoleInput = {
@@ -493,6 +542,8 @@ export type UsersUncheckedCreateWithoutRoleInput = {
   image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  shipping?: Prisma.ShippingsUncheckedCreateNestedManyWithoutUserInput
+  order?: Prisma.OrdersUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UsersCreateOrConnectWithoutRoleInput = {
@@ -535,6 +586,130 @@ export type UsersScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Users"> | Date | string
 }
 
+export type UsersCreateWithoutShippingInput = {
+  email: string
+  name?: string | null
+  password: string
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  role: Prisma.RolesCreateNestedOneWithoutUsersInput
+  order?: Prisma.OrdersCreateNestedManyWithoutUserInput
+}
+
+export type UsersUncheckedCreateWithoutShippingInput = {
+  id?: number
+  email: string
+  name?: string | null
+  password: string
+  image?: string | null
+  roleId: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  order?: Prisma.OrdersUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UsersCreateOrConnectWithoutShippingInput = {
+  where: Prisma.UsersWhereUniqueInput
+  create: Prisma.XOR<Prisma.UsersCreateWithoutShippingInput, Prisma.UsersUncheckedCreateWithoutShippingInput>
+}
+
+export type UsersUpsertWithoutShippingInput = {
+  update: Prisma.XOR<Prisma.UsersUpdateWithoutShippingInput, Prisma.UsersUncheckedUpdateWithoutShippingInput>
+  create: Prisma.XOR<Prisma.UsersCreateWithoutShippingInput, Prisma.UsersUncheckedCreateWithoutShippingInput>
+  where?: Prisma.UsersWhereInput
+}
+
+export type UsersUpdateToOneWithWhereWithoutShippingInput = {
+  where?: Prisma.UsersWhereInput
+  data: Prisma.XOR<Prisma.UsersUpdateWithoutShippingInput, Prisma.UsersUncheckedUpdateWithoutShippingInput>
+}
+
+export type UsersUpdateWithoutShippingInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  role?: Prisma.RolesUpdateOneRequiredWithoutUsersNestedInput
+  order?: Prisma.OrdersUpdateManyWithoutUserNestedInput
+}
+
+export type UsersUncheckedUpdateWithoutShippingInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  roleId?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  order?: Prisma.OrdersUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UsersCreateWithoutOrderInput = {
+  email: string
+  name?: string | null
+  password: string
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  role: Prisma.RolesCreateNestedOneWithoutUsersInput
+  shipping?: Prisma.ShippingsCreateNestedManyWithoutUserInput
+}
+
+export type UsersUncheckedCreateWithoutOrderInput = {
+  id?: number
+  email: string
+  name?: string | null
+  password: string
+  image?: string | null
+  roleId: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  shipping?: Prisma.ShippingsUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UsersCreateOrConnectWithoutOrderInput = {
+  where: Prisma.UsersWhereUniqueInput
+  create: Prisma.XOR<Prisma.UsersCreateWithoutOrderInput, Prisma.UsersUncheckedCreateWithoutOrderInput>
+}
+
+export type UsersUpsertWithoutOrderInput = {
+  update: Prisma.XOR<Prisma.UsersUpdateWithoutOrderInput, Prisma.UsersUncheckedUpdateWithoutOrderInput>
+  create: Prisma.XOR<Prisma.UsersCreateWithoutOrderInput, Prisma.UsersUncheckedCreateWithoutOrderInput>
+  where?: Prisma.UsersWhereInput
+}
+
+export type UsersUpdateToOneWithWhereWithoutOrderInput = {
+  where?: Prisma.UsersWhereInput
+  data: Prisma.XOR<Prisma.UsersUpdateWithoutOrderInput, Prisma.UsersUncheckedUpdateWithoutOrderInput>
+}
+
+export type UsersUpdateWithoutOrderInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  role?: Prisma.RolesUpdateOneRequiredWithoutUsersNestedInput
+  shipping?: Prisma.ShippingsUpdateManyWithoutUserNestedInput
+}
+
+export type UsersUncheckedUpdateWithoutOrderInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  roleId?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  shipping?: Prisma.ShippingsUncheckedUpdateManyWithoutUserNestedInput
+}
+
 export type UsersCreateManyRoleInput = {
   id?: number
   email: string
@@ -552,6 +727,8 @@ export type UsersUpdateWithoutRoleInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  shipping?: Prisma.ShippingsUpdateManyWithoutUserNestedInput
+  order?: Prisma.OrdersUpdateManyWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateWithoutRoleInput = {
@@ -562,6 +739,8 @@ export type UsersUncheckedUpdateWithoutRoleInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  shipping?: Prisma.ShippingsUncheckedUpdateManyWithoutUserNestedInput
+  order?: Prisma.OrdersUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateManyWithoutRoleInput = {
@@ -575,6 +754,44 @@ export type UsersUncheckedUpdateManyWithoutRoleInput = {
 }
 
 
+/**
+ * Count Type UsersCountOutputType
+ */
+
+export type UsersCountOutputType = {
+  shipping: number
+  order: number
+}
+
+export type UsersCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  shipping?: boolean | UsersCountOutputTypeCountShippingArgs
+  order?: boolean | UsersCountOutputTypeCountOrderArgs
+}
+
+/**
+ * UsersCountOutputType without action
+ */
+export type UsersCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UsersCountOutputType
+   */
+  select?: Prisma.UsersCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * UsersCountOutputType without action
+ */
+export type UsersCountOutputTypeCountShippingArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ShippingsWhereInput
+}
+
+/**
+ * UsersCountOutputType without action
+ */
+export type UsersCountOutputTypeCountOrderArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OrdersWhereInput
+}
+
 
 export type UsersSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -586,6 +803,9 @@ export type UsersSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   createdAt?: boolean
   updatedAt?: boolean
   role?: boolean | Prisma.RolesDefaultArgs<ExtArgs>
+  shipping?: boolean | Prisma.Users$shippingArgs<ExtArgs>
+  order?: boolean | Prisma.Users$orderArgs<ExtArgs>
+  _count?: boolean | Prisma.UsersCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["users"]>
 
 export type UsersSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -626,6 +846,9 @@ export type UsersSelectScalar = {
 export type UsersOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "name" | "password" | "image" | "roleId" | "createdAt" | "updatedAt", ExtArgs["result"]["users"]>
 export type UsersInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   role?: boolean | Prisma.RolesDefaultArgs<ExtArgs>
+  shipping?: boolean | Prisma.Users$shippingArgs<ExtArgs>
+  order?: boolean | Prisma.Users$orderArgs<ExtArgs>
+  _count?: boolean | Prisma.UsersCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UsersIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   role?: boolean | Prisma.RolesDefaultArgs<ExtArgs>
@@ -638,6 +861,8 @@ export type $UsersPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   name: "Users"
   objects: {
     role: Prisma.$RolesPayload<ExtArgs>
+    shipping: Prisma.$ShippingsPayload<ExtArgs>[]
+    order: Prisma.$OrdersPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1043,6 +1268,8 @@ readonly fields: UsersFieldRefs;
 export interface Prisma__UsersClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   role<T extends Prisma.RolesDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RolesDefaultArgs<ExtArgs>>): Prisma.Prisma__RolesClient<runtime.Types.Result.GetResult<Prisma.$RolesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  shipping<T extends Prisma.Users$shippingArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Users$shippingArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ShippingsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  order<T extends Prisma.Users$orderArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Users$orderArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrdersPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1473,6 +1700,54 @@ export type UsersDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * Limit how many Users to delete.
    */
   limit?: number
+}
+
+/**
+ * Users.shipping
+ */
+export type Users$shippingArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Shippings
+   */
+  select?: Prisma.ShippingsSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Shippings
+   */
+  omit?: Prisma.ShippingsOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ShippingsInclude<ExtArgs> | null
+  where?: Prisma.ShippingsWhereInput
+  orderBy?: Prisma.ShippingsOrderByWithRelationInput | Prisma.ShippingsOrderByWithRelationInput[]
+  cursor?: Prisma.ShippingsWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ShippingsScalarFieldEnum | Prisma.ShippingsScalarFieldEnum[]
+}
+
+/**
+ * Users.order
+ */
+export type Users$orderArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Orders
+   */
+  select?: Prisma.OrdersSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Orders
+   */
+  omit?: Prisma.OrdersOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrdersInclude<ExtArgs> | null
+  where?: Prisma.OrdersWhereInput
+  orderBy?: Prisma.OrdersOrderByWithRelationInput | Prisma.OrdersOrderByWithRelationInput[]
+  cursor?: Prisma.OrdersWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OrdersScalarFieldEnum | Prisma.OrdersScalarFieldEnum[]
 }
 
 /**

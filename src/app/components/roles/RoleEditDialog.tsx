@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 
 type Errors = Partial<Record<"name", string>>;
 
-export default function RoleAddDialog({
+export default function RoleEditDialog({
   open,
   setOpen,
   onSuccess,

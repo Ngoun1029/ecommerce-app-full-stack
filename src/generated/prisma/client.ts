@@ -64,3 +64,18 @@ export type Products = Prisma.ProductsModel
  * 
  */
 export type Banners = Prisma.BannersModel
+/**
+ * Model Shippings
+ * 
+ */
+export type Shippings = Prisma.ShippingsModel
+/**
+ * Model Orders
+ * 
+ */
+export type Orders = Prisma.OrdersModel
+/**
+ * Model OrderItems
+ * 
+ */
+export type OrderItems = Prisma.OrderItemsModel

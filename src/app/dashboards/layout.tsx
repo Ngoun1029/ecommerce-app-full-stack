@@ -1,21 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
 import {
   FaHome,
-  FaChartLine,
   FaBoxOpen,
   FaTags,
   FaUsers,
   FaUserShield,
-  FaEnvelope,
 } from "react-icons/fa";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { FaBars } from "react-icons/fa6";
+import { FaBars, FaImage } from "react-icons/fa6";
 
 export const navSections = [
   {
@@ -28,7 +26,8 @@ export const navSections = [
       },
       {
         label: "Banners",
-        href: "/dashboards/banners"
+        href: "/dashboards/banners",
+        icon: <FaImage/>
       },
       {
         label: "Products",
@@ -50,11 +49,16 @@ export const navSections = [
         href: "/dashboards/roles",
         icon: <FaUserShield />,
       },
+      {
+        label: "Shipping Address",
+        href: "/dashboards/shippings",
+        
+      }
     ],
   },
 ];
 
-/* ================= LAYOUT ================= */
+
 
 export default function DashboardLayout({
   children,

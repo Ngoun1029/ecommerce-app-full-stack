@@ -13,12 +13,29 @@ datasource db {
   provider = "postgresql"
 }
 
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentStatus {
+  UNPAID
+  PAID
+  FAILED
+  REFUNDED
+}
+
 model Roles {
   id        Int      @id @default(autoincrement())
   name      String   @unique
   users     Users[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
   @@index([name])
 }
 
@@ -33,6 +50,9 @@ model Users {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  shipping Shippings[]
+  order    Orders[]
 
   @@index([email])
   @@index([name])
@@ -64,18 +84,71 @@ model Products {
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 
+  orderItem OrderItems[]
+
   @@index([price])
   @@index([categoryId])
   @@index([name])
 }
 
 model Banners {
-  id        Int      @id @default(autoincrement())
-  name      String
-  image     String
+  id          Int      @id @default(autoincrement())
+  name        String
+  image       String
   description String?
-  link      String
+  link        String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Shippings {
+  id          Int     @id @default(autoincrement())
+  userId      Int     @unique
+  user        Users   @relation(fields: [userId], references: [id])
+  address1    String?
+  address2    String?
+  city        String?
+  stats       String
+  countryCode String
+  postalCode  String
+
+  order Orders[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
+model Orders {
+  id            Int           @id @default(autoincrement())
+  orderCode     String
+  userId        Int
+  shippingId    Int
+  paymentMethod String
+  status        OrderStatus   @default(PENDING)
+  paymentStatus PaymentStatus @default(UNPAID)
+  promotionCode String        @default("")
+  totalAmount   Decimal       @db.Decimal(10, 2)
+
+  orderItem OrderItems[]
+
+  user     Users     @relation(fields: [userId], references: [id])
+  shipping Shippings @relation(fields: [shippingId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model OrderItems {
+  id        Int @id @default(autoincrement())
+  orderId   Int
+  productId Int
+  price     Decimal @db.Decimal(10,2)
+  quantity  Int
+  subTotal  Decimal @db.Decimal(10,2)
+
+  order   Orders   @relation(fields: [orderId], references: [id])
+  product Products @relation(fields: [productId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
