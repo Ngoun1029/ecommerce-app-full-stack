@@ -6,9 +6,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const { searchParams } = new URL(request.url);
 
     const page = Math.max(Number(searchParams.get("page") ?? 1), 1);
-    const perPage = Math.min(Number(searchParams.get("perPage") ?? 10), 100);
+    const perPage = Math.min(Number(searchParams.get("perPage") ?? 10));
     const skip = (page - 1) * perPage;
-    // Filters
+
     const nameFilter = searchParams.get("name") || undefined;
     const categoryFilter = searchParams.get("categoryId")
       ? Number(searchParams.get("categoryId"))
@@ -20,12 +20,11 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       ? parseFloat(searchParams.get("priceMax")!)
       : undefined;
 
-    // Build Prisma where object
     const where: any = {
         status: true
     };
     if (nameFilter) {
-      where.name = { contains: nameFilter, mode: "insensitive" }; // case-insensitive search
+      where.name = { contains: nameFilter, mode: "insensitive" }; 
     }
     if (categoryFilter !== undefined) {
       where.categoryId = categoryFilter;
@@ -49,18 +48,14 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       prisma.products.count({ where }),
     ]);
 
-    // Map mainImage
     const productsWithMainImage = products.map((product) => {
     
       const images = (product.image as Record<string, string>) || {};
       const firstImage = Object.values(images)[0] || null;
-      const mainImage = firstImage
-        ? firstImage
-        : null;
 
       return {
         ...product,
-        image: mainImage,
+        image: firstImage ? firstImage : null,
         category: product.category.name,
       };
     });

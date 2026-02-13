@@ -3,31 +3,27 @@
 import Link from "next/link";
 import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-
 import {
-  FaHome,
+  FaImage,
   FaBoxOpen,
   FaTags,
   FaUsers,
   FaUserShield,
+  FaMapMarkedAlt,
+  FaShoppingCart,
 } from "react-icons/fa";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { FaBars, FaImage } from "react-icons/fa6";
+import { FaBars, FaTruck } from "react-icons/fa6";
 
 export const navSections = [
   {
     title: "Overview",
     items: [
       {
-        label: "Dashboard",
-        href: "/apps/dashboards",
-        icon: <FaHome />,
-      },
-      {
         label: "Banners",
         href: "/dashboards/banners",
-        icon: <FaImage/>
+        icon: <FaImage />,
       },
       {
         label: "Products",
@@ -52,13 +48,16 @@ export const navSections = [
       {
         label: "Shipping Address",
         href: "/dashboards/shippings",
-        
-      }
+        icon: <FaMapMarkedAlt />, // ✅ better match
+      },
+      {
+        label: "Orders",
+        href: "/dashboards/orders",
+        icon: <FaShoppingCart />, // ✅ better than truck
+      },
     ],
   },
 ];
-
-
 
 export default function DashboardLayout({
   children,

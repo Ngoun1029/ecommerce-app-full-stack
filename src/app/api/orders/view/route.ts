@@ -13,38 +13,14 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         skip,
         take: perPage,
         orderBy: { createdAt: "desc" },
-        include: {
-          orderItem: {
-            include: {
-              product: true,
-            },
-          },
-        },
       }),
       prisma.orders.count(),
     ]);
 
-    const formattedData = orders.map((order) => {
-      return {
-        ...order,
-        orderItem: order.orderItem.map((item) => {
-          const images = (item.product.image as Record<string, string>) || {};
-          const firstImage = Object.values(images)[0] || null;
-          const mainImage = firstImage ? firstImage : null;
-          return {
-            ...item,
-  
-            // item.product.image: item.product.name,
-            // image: mainImage,
-          };
-        }),
-      };
-    });
-
     return NextResponse.json(
       {
         status: "success",
-        data: formattedData,
+        data: orders,
         meta: {
           current_page: page,
           per_page: perPage,

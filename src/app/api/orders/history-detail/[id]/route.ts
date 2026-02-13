@@ -1,7 +1,10 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { prisma } from "../../../../../lib/prisma";
-
-export async function GET(request: Request) {
+import { prisma } from "../../../../../../lib/prisma";
+import { findOneWithRelations } from "../../../../../../lib/find";
+export async function GET(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> },
+) {
   try {
     const authHeader = request.headers.get("authorization");
 
@@ -49,31 +52,43 @@ export async function GET(request: Request) {
       );
     }
 
-    const { searchParams } = new URL(request.url);
-    const page = Math.max(Number(searchParams.get("page") ?? 1));
-    const perPage = Math.max(Number(searchParams.get("perPage") ?? 10));
-    const skip = (page - 1) * perPage;
+    const orders = await findOneWithRelations(
+      "orders",
+      Number((await params).id),
+      "id",
+      {
+        orderItem: {
+          include: {
+            product: true,
+          },
+        },
+      },
+      true,
+    );
 
-    const [orders, total] = await Promise.all([
-      prisma.orders.findMany({
-        skip,
-        where: { userId: user.id },
-        take: perPage,
-        orderBy: { createdAt: "desc" },
+    const formattedData = {
+      ...orders,
+      orderItem: orders.orderItem.map((item: any) => {
+        const firstImage =
+          item.product.image &&
+          Object.values(item.product.image as Record<string, string>).length > 0
+            ? Object.values(item.product.image as Record<string, string>)[0]
+            : null;
+
+        return {
+          ...item,
+          product: {
+            ...item.product,
+            image: firstImage,
+          },
+        };
       }),
-      prisma.orders.count(),
-    ]);
+    };
 
     return Response.json(
       {
         status: "success",
-        data: orders,
-        meta: {
-          current_page: page,
-          per_page: perPage,
-          total,
-          last_page: Math.ceil(total / perPage),
-        },
+        data: formattedData,
       },
       { status: 200 },
     );
