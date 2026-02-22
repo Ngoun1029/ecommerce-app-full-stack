@@ -9,7 +9,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const data = categories.map((category) => ({
       id: category.id,
       name: category.name,
-      image: process.env.R2_PUBLIC_URL + "/" + category.image,
+      image: category.image,
       status: category.status,
       createdAt: category.createdAt,
     }));
