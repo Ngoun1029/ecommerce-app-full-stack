@@ -11,9 +11,22 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (!body.name || !body.email || !body.password) {
       return NextResponse.json(
         { status: "error", message: "Missing required fields" },
-        { status: 400 },
+        { status: 400 }
       );
     }
+
+    const email = await findOneWithRelations(
+      "users",
+      body.email,
+      "email",
+      {},
+      true
+    );
+    if (email)
+      return NextResponse.json(
+        { status: "error", message: "email already exist" },
+        { status: 400 }
+      );
 
     // ✅ FIXED
     let roleAsUser = await findOneWithRelations(
@@ -21,7 +34,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       "user",
       "name",
       {},
-      true,
+      true
     );
 
     if (!roleAsUser) {
@@ -46,7 +59,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         status: "success",
         message: "User registered successfully",
       },
-      { status: 201 },
+      { status: 201 }
     );
   } catch (error: unknown) {
     console.log(error);
@@ -56,7 +69,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         status: "error",
         message: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
