@@ -76,7 +76,7 @@ export default function CategoryCreateDialog({
       fd.append("image", form.image!);
       fd.append("status", String(form.status));
 
-      const res = await fetch("/api/category/create", {
+      const res = await fetch("/api/categories/create", {
         method: "POST",
         body: fd,
       });
