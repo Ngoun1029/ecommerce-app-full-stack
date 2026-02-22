@@ -4,5 +4,6 @@ export type RegisterRequest = {
     password: string;
     image: File | null;
     roleId: number;
+    dob: string;
     
 }

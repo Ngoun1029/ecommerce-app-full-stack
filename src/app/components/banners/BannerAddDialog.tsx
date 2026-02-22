@@ -6,13 +6,6 @@
   import DropDown from "../ui/DropDown";
   import { useEffect, useState } from "react";
 
-  type FormState = {
-    name: string;
-    image: string;
-    description: string;
-    link: string;
-  };
-
   export default function BannerAddDialog({ open, setOpen, onSuccess }: Props) {
     const [mounted, setMounted] = useState(false);
 
@@ -24,7 +17,7 @@
     const [product, setProduct] = useState<ProductListResponse | null>(null);
 
     /* Form */
-    const [form, setForm] = useState<FormState>({
+    const [form, setForm] = useState({
       name: "",
       image: "",
       description: "",

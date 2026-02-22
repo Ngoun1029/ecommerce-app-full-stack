@@ -11,6 +11,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const name = (formData.get("name") as string)?.trim();
     const email = (formData.get("email") as string)?.trimEnd();
     const password = formData.get("password") as string;
+    const dob = formData.get("dob") as string;
     const imageFile = formData.get("image") as File;
 
     if (!name) {
@@ -56,6 +57,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         password: await bcrypt.hash(password, 10),
         image: imageUrl,
         roleId: roleAsUser.id,
+        dob,
       },
     });
 
