@@ -43,6 +43,7 @@ model Users {
   id       Int     @id @default(autoincrement())
   email    String  @unique
   name     String?
+  gender    String?
   password String
   image    String?
   roleId   Int
