@@ -20,7 +20,7 @@ export async function GET(
       return {
         id: cat.id,
         name: cat.name,
-        image: process.env.R2_PUBLIC_URL + "/" + cat.image,
+        image:  cat.image,
         status: cat.status,
         createdAt: cat.createdAt,
       };
