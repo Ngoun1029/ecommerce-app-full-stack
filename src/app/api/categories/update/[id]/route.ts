@@ -1,4 +1,3 @@
-
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "../../../../../../lib/prisma";
 import { uploadToR2 } from "../../../../../../utils/file";
@@ -6,7 +5,7 @@ import { CategoryRequest } from "@/app/types/request/CategoryRequest";
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse> {
   try {
     const body: CategoryRequest = await request.json();
@@ -22,7 +21,7 @@ export async function PATCH(
         status: "success",
         message: `Category updated successfully`,
       },
-      { status: 200 },
+      { status: 200 }
     );
   } catch (error: unknown) {
     return NextResponse.json(
@@ -30,14 +29,14 @@ export async function PATCH(
         status: "error",
         message: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse> {
   try {
     const frmData = await request.formData();
@@ -48,20 +47,20 @@ export async function POST(
         originalName: imageFile.name,
         mimeType: imageFile.type,
       },
-      "categories",
+      "categories"
     );
 
     if (!imageUrl) {
       return NextResponse.json(
         { status: "error", message: "Failed to upload image" },
-        { status: 500 },
+        { status: 500 }
       );
     }
 
     await prisma.categories.update({
       where: { id: Number((await params).id) },
       data: {
-        image: imageUrl,
+        image: `${process.env.R2_PUBLIC_URL}/${imageUrl}`,
       },
     });
     return NextResponse.json(
@@ -71,7 +70,7 @@ export async function POST(
       },
       {
         status: 200,
-      },
+      }
     );
   } catch (error: unknown) {
     console.error(error);
@@ -80,7 +79,7 @@ export async function POST(
         status: "error",
         message: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
