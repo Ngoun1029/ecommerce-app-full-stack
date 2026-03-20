@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import { uploadToR2 } from "../../../../../utils/file";
 export async function PATCH(request: NextRequest): Promise<NextResponse> {
   try {
-    const body: { name: string; email: string } = await request.json();
+    const body: { name: string; email: string; gender: string; dob: string } = await request.json();
     const authHeader = request.headers.get("authorization");
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -21,6 +21,8 @@ export async function PATCH(request: NextRequest): Promise<NextResponse> {
       data: {
         name: body.name,
         email: body.email,
+        gender: body.gender,
+        dob: body.dob,
       },
       where: { id: decoded.id },
     });

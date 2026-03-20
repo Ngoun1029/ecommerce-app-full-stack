@@ -7,6 +7,7 @@ import { serialize } from "cookie";
 
 export async function POST(req: Request) {
   try {
+
     const { email, password } = await req.json();
 
     if (!email || !password) {
@@ -52,6 +53,8 @@ export async function POST(req: Request) {
       id: user.id,
       name: user.name,
       email: user.email,
+      gender: user.gender,
+      dob: user.dob,
       role: user.role.name || null,
     };
 

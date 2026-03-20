@@ -1,3 +1,5 @@
+// middleware.ts
+
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import jwt from "jsonwebtoken";
@@ -10,10 +12,28 @@ const publicPaths = [
   "/api/products/client-view",
   "/api/products/client-detail",
   "/api/banners/client-view",
+  "/api/proxy/image",
 ];
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin":  "*",
+  "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS", // ← PATCH added
+  "Access-Control-Allow-Headers": "Content-Type, Authorization, Accept",
+};
+
+function withCors(response: NextResponse): NextResponse {
+  Object.entries(corsHeaders).forEach(([k, v]) =>
+    response.headers.set(k, v),
+  );
+  return response;
+}
+
 export async function middleware(req: NextRequest) {
+  if (req.method === "OPTIONS") {
+    return new NextResponse(null, { status: 200, headers: corsHeaders });
+  }
+
   try {
-    // ✅ Public routes
     const { pathname } = req.nextUrl;
 
     const isPublic = publicPaths.some(
@@ -21,52 +41,61 @@ export async function middleware(req: NextRequest) {
     );
 
     if (isPublic) {
-      return NextResponse.next();
-    }
-    // 1️⃣ Get token from cookie
-    const token = req.cookies.get("access_token")?.value;
-    if (!token) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return withCors(NextResponse.next());
     }
 
-    // 2️⃣ Verify token
+    let token: string | undefined;
+
+    const authHeader = req.headers.get("Authorization");
+    if (authHeader?.startsWith("Bearer ")) {
+      token = authHeader.slice(7);
+    } else {
+      token = req.cookies.get("access_token")?.value;
+    }
+
+    if (!token) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401, headers: corsHeaders },
+      );
+    }
+
     const payload = jwt.verify(token, process.env.JWT_SECRET!) as any;
 
-    // 3️⃣ Fetch user + role
     const user = await prisma.users.findUnique({
       where: { id: payload.id },
       include: { role: true },
     });
 
     if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 401 });
+      return NextResponse.json(
+        { error: "User not found" },
+        { status: 401, headers: corsHeaders },
+      );
     }
 
-    // 4️⃣ Optional role-based example: block non-admin from roles route
-    if (
-      req.nextUrl.pathname.startsWith("/api/roles") &&
-      user.role.name !== "admin"
-    ) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    if (pathname.startsWith("/api/roles") && user.role.name !== "admin") {
+      return NextResponse.json(
+        { error: "Forbidden" },
+        { status: 403, headers: corsHeaders },
+      );
     }
 
-    // 5️⃣ Pass user info to the route via headers
     const res = NextResponse.next();
-    res.headers.set("x-user-id", user.id.toString());
+    res.headers.set("x-user-id",    user.id.toString());
     res.headers.set("x-user-email", user.email);
-    res.headers.set("x-user-role", user.role.name);
+    res.headers.set("x-user-role",  user.role.name);
 
-    return res;
+    return withCors(res);
   } catch (err) {
     console.error("Middleware auth error:", err);
     return NextResponse.json(
       { error: "Invalid or expired token" },
-      { status: 401 },
+      { status: 401, headers: corsHeaders },
     );
   }
 }
 
-// 6️⃣ Apply middleware to ALL API routes
 export const config = {
   matcher: ["/api/:path*"],
   runtime: "nodejs",

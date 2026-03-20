@@ -24,6 +24,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         id: true,
         name: true,
         email: true,
+        gender: true,
+        dob: true,
         image: true,
         createdAt: true,
       },

@@ -3,8 +3,6 @@ export type RegisterRequest = {
     gender: string;
     email: string;
     password: string;
-    image: File | null;
-    roleId: number;
     dob: string;
     
 }
