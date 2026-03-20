@@ -13,6 +13,8 @@ const publicPaths = [
   "/api/products/client-detail",
   "/api/banners/client-view",
   "/api/proxy/image",
+  "/api/webhook",                 
+  "/api/create-payment-intent",
 ];
 
 const corsHeaders = {
