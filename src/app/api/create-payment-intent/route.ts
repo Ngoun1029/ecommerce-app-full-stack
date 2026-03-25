@@ -5,27 +5,19 @@ export async function POST(req: NextRequest) {
   try {
     const { amount, currency = 'usd' } = await req.json();
 
-    if (!amount || typeof amount !== 'number') {
-      return NextResponse.json(
-        { error: 'Invalid amount' },
-        { status: 400 }
-      );
+    if (!amount || typeof amount !== 'number' || amount <= 0) {
+      return NextResponse.json({ error: 'Invalid amount' }, { status: 400 });
     }
 
     const paymentIntent = await stripe.paymentIntents.create({
-      amount,        // in smallest unit e.g. cents ($10.00 = 1000)
+      amount,
       currency,
-      automatic_payment_methods: {
-        enabled: true, // supports card, Google Pay, Apple Pay
-      },
+      automatic_payment_methods: { enabled: true },
     });
 
     return NextResponse.json({ clientSecret: paymentIntent.client_secret });
-
   } catch (error: any) {
-    return NextResponse.json(
-      { error: error.message },
-      { status: 500 }
-    );
+    console.error('Stripe PaymentIntent creation error:', error);
+    return NextResponse.json({ error: error.message || 'Server error' }, { status: 500 });
   }
 }
