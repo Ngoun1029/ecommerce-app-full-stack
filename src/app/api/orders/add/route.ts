@@ -3,7 +3,7 @@ import { prisma } from "../../../../../lib/prisma";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { findOneWithRelations } from "../../../../../lib/find";
 import { generateOrderCode } from "../../../../../utils/generatedCode";
-import { OrderStatus, PaymentStatus } from "@/generated/prisma/enums";
+import { PaymentStatus } from "@/generated/prisma/enums";
 
 export async function POST(request: Request) {
   try {
@@ -36,6 +36,7 @@ export async function POST(request: Request) {
         { status: 401 },
       );
     }
+
     if (!decoded.id) {
       return Response.json(
         { status: "error", message: "Invalid token payload" },
@@ -62,21 +63,7 @@ export async function POST(request: Request) {
       true,
     );
 
-    await prisma.orders.create({
-      data: {
-        orderCode: generateOrderCode(),
-        userId: user.id,
-        shippingId: shipping.id,
-        paymentMethod: body.paymentMethod,
-        paymentStatus:
-          body.paymentMethod.toLocaleUpperCase() === "CARD"
-            ? PaymentStatus.PAID
-            : PaymentStatus.UNPAID,
-        promotionCode: body.promotionCode,
-        totalAmount: 0,
-      },
-    });
-
+    // ✅ Single order creation inside the transaction only
     await prisma.$transaction(async (tx) => {
       const order = await tx.orders.create({
         data: {
@@ -86,6 +73,11 @@ export async function POST(request: Request) {
           paymentMethod: body.paymentMethod,
           promotionCode: body.promotionCode ?? "",
           totalAmount: 0,
+          // ✅ PAID for card (Stripe already charged), UNPAID for cash
+          paymentStatus:
+            body.paymentMethod.toLowerCase() === "card"
+              ? PaymentStatus.PAID
+              : PaymentStatus.UNPAID,
         },
       });
 
@@ -96,15 +88,19 @@ export async function POST(request: Request) {
           where: { id: item.productId },
         });
 
-        const subTotal = Number(product?.price) * Number(item.quantity);
+        if (!product) {
+          throw new Error(`Product with id ${item.productId} not found`);
+        }
+
+        const subTotal = Number(product.price) * Number(item.quantity);
         totalAmount += subTotal;
 
         await tx.orderItems.create({
           data: {
             orderId: order.id,
-            productId: Number(product?.id),
+            productId: product.id,
             quantity: item.quantity,
-            price: Number(product?.price),
+            price: Number(product.price),
             subTotal: subTotal,
           },
         });
@@ -112,18 +108,14 @@ export async function POST(request: Request) {
 
       await tx.orders.update({
         where: { id: order.id },
-        data: {
-          totalAmount: totalAmount,
-        },
+        data: { totalAmount },
       });
+
       return order;
     });
 
     return Response.json(
-      {
-        status: "success",
-        message: "order successfully",
-      },
+      { status: "success", message: "Order created successfully" },
       { status: 200 },
     );
   } catch (error: unknown) {
