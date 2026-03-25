@@ -10,6 +10,7 @@ const publicPaths = [
   "/api/auths/registers",
   "/api/categories/client-view",
   "/api/products/client-view",
+  "/api/client-product-home-view",
   "/api/products/client-detail",
   "/api/banners/client-view",
   "/api/proxy/image",

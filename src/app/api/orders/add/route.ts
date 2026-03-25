@@ -3,8 +3,7 @@ import { prisma } from "../../../../../lib/prisma";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { findOneWithRelations } from "../../../../../lib/find";
 import { generateOrderCode } from "../../../../../utils/generatedCode";
-
-
+import { OrderStatus, PaymentStatus } from "@/generated/prisma/enums";
 
 export async function POST(request: Request) {
   try {
@@ -69,13 +68,16 @@ export async function POST(request: Request) {
         userId: user.id,
         shippingId: shipping.id,
         paymentMethod: body.paymentMethod,
+        paymentStatus:
+          body.paymentMethod.toLocaleUpperCase() === "CARD"
+            ? PaymentStatus.PAID
+            : PaymentStatus.UNPAID,
         promotionCode: body.promotionCode,
         totalAmount: 0,
       },
     });
 
     await prisma.$transaction(async (tx) => {
-
       const order = await tx.orders.create({
         data: {
           orderCode: generateOrderCode(),
@@ -125,7 +127,6 @@ export async function POST(request: Request) {
       { status: 200 },
     );
   } catch (error: unknown) {
-    
     return Response.json(
       {
         status: "error",
