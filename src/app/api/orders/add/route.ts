@@ -119,6 +119,7 @@ export async function POST(request: Request) {
       { status: 200 },
     );
   } catch (error: unknown) {
+    console.log(error);
     return Response.json(
       {
         status: "error",
