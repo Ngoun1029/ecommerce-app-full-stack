@@ -77,7 +77,7 @@ export async function middleware(req: NextRequest) {
       );
     }
 
-    if (pathname.startsWith("/api/roles") && user.role.name !== "admin") {
+    if (pathname.startsWith("/api/roles") && user.role.name !== "admin" || "Admin") {
       return NextResponse.json(
         { error: "Forbidden" },
         { status: 403, headers: corsHeaders },

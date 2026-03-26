@@ -29,6 +29,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       { status: 200 },
     );
   } catch (error: unknown) {
+    
     return NextResponse.json(
       {
         status: "error",
