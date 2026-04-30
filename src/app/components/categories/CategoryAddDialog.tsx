@@ -37,7 +37,7 @@ export default function CategoryCreateDialog({
     fileInputRef.current?.click();
   };
 
-  /* ---------------- Validation ---------------- */
+
   const validate = () => {
     const e: Errors = {};
 
